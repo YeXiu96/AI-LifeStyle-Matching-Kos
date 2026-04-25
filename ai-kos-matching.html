@@ -1,260 +1,3599 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AI Lifestyle Matching Kos</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-html{scroll-behavior:smooth}
-body.dark{background:#0f172a;color:white}
-.card{transition:.25s}
-.card:hover{transform:translateY(-6px)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KosMatch AI — Find Your Perfect Boarding House</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ============================================================
+   CSS VARIABLES & RESET
+   ============================================================ */
+    :root {
+      --sage: #7C9A7E;
+      --sage-light: #A8C5AA;
+      --sage-dark: #4A6B4C;
+      --cream: #F5F0E8;
+      --warm-white: #FDFAF5;
+      --charcoal: #1C1C1E;
+      --charcoal-soft: #2C2C2E;
+      --clay: #C4845A;
+      --clay-light: #E8B494;
+      --mist: #E8EDE9;
+      --gold: #C9A84C;
+      --error: #D94F4F;
+      --success: #4A9B6F;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 40px;
+
+      --shadow-sm: 0 2px 8px rgba(28, 28, 30, 0.06);
+      --shadow-md: 0 8px 32px rgba(28, 28, 30, 0.10);
+      --shadow-lg: 0 24px 64px rgba(28, 28, 30, 0.14);
+
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--warm-white);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-display);
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 900;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ============================================================
+   NAVIGATION
+   ============================================================ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      height: 72px;
+      background: rgba(253, 250, 245, 0.90);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(124, 154, 126, 0.15);
+      transition: var(--transition);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--charcoal);
+    }
+
+    .nav-logo .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #555;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--sage-dark);
+    }
+
+    .nav-cta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: var(--radius-xl);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--charcoal);
+      border: 1.5px solid rgba(28, 28, 30, 0.15);
+    }
+
+    .btn-ghost:hover {
+      background: var(--mist);
+      border-color: var(--sage);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      box-shadow: 0 4px 16px rgba(74, 107, 76, 0.30);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74, 107, 76, 0.40);
+    }
+
+    .btn-clay {
+      background: linear-gradient(135deg, var(--clay), #B07048);
+      color: white;
+      box-shadow: 0 4px 16px rgba(196, 132, 90, 0.30);
+    }
+
+    .btn-clay:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(196, 132, 90, 0.40);
+    }
+
+    .btn-lg {
+      padding: 14px 32px;
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+   HERO
+   ============================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 5% 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(124, 154, 126, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(196, 132, 90, 0.08) 0%, transparent 60%),
+        var(--warm-white);
+    }
+
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124, 154, 126, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 154, 126, 0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 154, 126, 0.12);
+      border: 1px solid rgba(124, 154, 126, 0.3);
+      color: var(--sage-dark);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--sage);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(1.4);
+      }
+    }
+
+    .hero h1 {
+      color: var(--charcoal);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--sage-dark);
+      position: relative;
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sage), var(--clay));
+      border-radius: 2px;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 40px;
+      max-width: 520px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-stat strong {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+
+    .hero-stat span {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .hero-visual {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(500px, 45vw);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-visual {
+        display: none;
+      }
+    }
+
+    /* Kos cards in hero */
+    .kos-card {
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: var(--transition);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .kos-card:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .kos-card:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    .kos-card:nth-child(4) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .kos-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .kos-card-img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .kos-card-img-placeholder {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .kos-card-body {
+      padding: 12px;
+    }
+
+    .kos-card-body h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 2px;
+    }
+
+    .kos-card-body p {
+      font-size: 0.72rem;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .match-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .kos-card.featured {
+      grid-column: 1 / 3;
+      display: flex;
+      gap: 12px;
+    }
+
+    .kos-card.featured .kos-card-img-placeholder {
+      width: 120px;
+      height: auto;
+      flex-shrink: 0;
+    }
+
+    .kos-card.featured .kos-card-body {
+      padding: 16px;
+    }
+
+    /* ============================================================
+   SECTION LAYOUT
+   ============================================================ */
+    section {
+      padding: 96px 5%;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 12px;
+    }
+
+    .section-header {
+      margin-bottom: 56px;
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+      max-width: 540px;
+      margin-top: 12px;
+    }
+
+    /* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+    .how-it-works {
+      background: var(--cream);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .step-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-number {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(124, 154, 126, 0.12);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .step-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--sage-light), var(--sage));
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .step-card p {
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+   AI MATCHING QUIZ SECTION
+   ============================================================ */
+    .quiz-section {
+      background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-soft) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 154, 126, 0.15) 0%, transparent 70%);
+    }
+
+    .quiz-section::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(196, 132, 90, 0.10) 0%, transparent 70%);
+    }
+
+    .quiz-section .section-label {
+      color: var(--sage-light);
+    }
+
+    .quiz-section h2 {
+      color: white;
+    }
+
+    .quiz-section>.quiz-inner>.section-header p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .quiz-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      backdrop-filter: blur(10px);
+      max-width: 860px;
+    }
+
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sage), var(--clay));
+      border-radius: 2px;
+      width: 40%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .quiz-question {
+      color: white;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      margin-bottom: 28px;
+      font-weight: 700;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .quiz-option {
+      padding: 16px 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--sage-light);
+      background: rgba(124, 154, 126, 0.12);
+      color: white;
+    }
+
+    .quiz-option.selected {
+      border-color: var(--sage);
+      background: rgba(124, 154, 126, 0.20);
+      color: white;
+    }
+
+    .quiz-option .opt-icon {
+      font-size: 1.3rem;
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    /* ============================================================
+   PROPERTY LISTINGS
+   ============================================================ */
+    .listings-section {
+      background: var(--warm-white);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      align-items: center;
+    }
+
+    .filter-chip {
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(28, 28, 30, 0.12);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      background: white;
+      color: #555;
+    }
+
+    .filter-chip:hover,
+    .filter-chip.active {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: white;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 1.5px solid rgba(28, 28, 30, 0.10);
+      border-radius: 100px;
+      padding: 10px 20px;
+      flex: 1;
+      min-width: 240px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      background: transparent;
+      color: var(--charcoal);
+    }
+
+    .search-bar span {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
+    }
+
+    .property-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .property-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .property-card-img {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+    }
+
+    .property-card-img .ai-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    .property-card-img .fav-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-size: 1rem;
+    }
+
+    .property-card-img .fav-btn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    .property-card-body {
+      padding: 20px 22px;
+    }
+
+    .property-card-body .location {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .property-card-body h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .property-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      background: var(--mist);
+      color: var(--sage-dark);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .property-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+
+    .price span {
+      font-size: 0.72rem;
+      font-family: var(--font-body);
+      color: #aaa;
+      font-weight: 400;
+    }
+
+    .match-score {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--sage-dark);
+    }
+
+    .match-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    /* ============================================================
+   ROOMMATE MATCHING
+   ============================================================ */
+    .roommate-section {
+      background: var(--mist);
+    }
+
+    .roommate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .roommate-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compatibility-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .compat-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .compat-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .compat-info {
+      flex: 1;
+    }
+
+    .compat-info h4 {
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .compat-info p {
+      font-size: 0.78rem;
+      color: #aaa;
+    }
+
+    .compat-bar {
+      width: 100px;
+      height: 6px;
+      background: var(--mist);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .compat-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sage), var(--sage-dark));
+      border-radius: 3px;
+    }
+
+    .compat-pct {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--sage-dark);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* ============================================================
+   FEATURES GRID
+   ============================================================ */
+    .features-section {
+      background: var(--warm-white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      padding: 32px 28px;
+      border-radius: var(--radius-lg);
+      border: 1.5px solid rgba(28, 28, 30, 0.07);
+      transition: var(--transition);
+      background: white;
+    }
+
+    .feature-card:hover {
+      border-color: var(--sage-light);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+   DASHBOARD PREVIEW
+   ============================================================ */
+    .dashboard-section {
+      background: var(--cream);
+    }
+
+    .dashboard-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      background: white;
+      padding: 6px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      width: fit-content;
+    }
+
+    .dash-tab {
+      padding: 10px 24px;
+      border-radius: var(--radius-xl);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      color: #888;
+      border: none;
+      background: transparent;
+    }
+
+    .dash-tab.active {
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      box-shadow: 0 4px 12px rgba(74, 107, 76, 0.25);
+    }
+
+    .dashboard-preview {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      display: none;
+    }
+
+    .dashboard-preview.active {
+      display: block;
+    }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .dash-header h3 {
+      font-size: 1.3rem;
+    }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .dash-stat-card {
+      background: var(--mist);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .dash-stat-card .label {
+      font-size: 0.78rem;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .dash-stat-card .value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+
+    .dash-stat-card .trend {
+      font-size: 0.75rem;
+      margin-top: 4px;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .recent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(28, 28, 30, 0.06);
+      transition: var(--transition);
+    }
+
+    .recent-item:hover {
+      background: var(--mist);
+    }
+
+    .recent-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+    }
+
+    .recent-info {
+      flex: 1;
+    }
+
+    .recent-info h4 {
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .recent-info p {
+      font-size: 0.78rem;
+      color: #aaa;
+    }
+
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .status-pending {
+      background: rgba(201, 168, 76, 0.12);
+      color: var(--gold);
+    }
+
+    .status-confirmed {
+      background: rgba(74, 155, 111, 0.12);
+      color: var(--success);
+    }
+
+    .status-rejected {
+      background: rgba(217, 79, 79, 0.12);
+      color: var(--error);
+    }
+
+    /* ============================================================
+   PROPERTY DETAIL PREVIEW
+   ============================================================ */
+    .detail-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 28, 30, 0.65);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+
+    .detail-modal-backdrop.open {
+      display: flex;
+    }
+
+    .detail-modal {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .detail-hero {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+    }
+
+    .detail-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: grid;
+      place-items: center;
+      transition: var(--transition);
+    }
+
+    .detail-close:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    .detail-body {
+      padding: 32px;
+    }
+
+    .detail-body h2 {
+      margin-bottom: 8px;
+    }
+
+    .detail-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      color: #888;
+      font-size: 0.88rem;
+    }
+
+    .detail-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--mist);
+      margin-bottom: 28px;
+    }
+
+    .detail-tab {
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition);
+      background: transparent;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+
+    .detail-tab.active {
+      color: var(--sage-dark);
+      border-bottom-color: var(--sage-dark);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 640px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .amenity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #555;
+    }
+
+    .amenity .check {
+      width: 22px;
+      height: 22px;
+      background: rgba(124, 154, 126, 0.12);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--sage-dark);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .booking-panel {
+      background: var(--mist);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .booking-panel .price-big {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--charcoal);
+      margin-bottom: 4px;
+    }
+
+    .booking-panel .price-sub {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid rgba(28, 28, 30, 0.12);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--sage);
+    }
+
+    .match-gauge {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .gauge-label {
+      font-size: 0.78rem;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .gauge-number {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--sage-dark);
+      line-height: 1;
+    }
+
+    .gauge-sub {
+      font-size: 0.72rem;
+      color: var(--sage);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+    .testimonials-section {
+      background: var(--warm-white);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 1.5px solid transparent;
+    }
+
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--sage-light);
+    }
+
+    .stars {
+      color: var(--gold);
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .author-info h4 {
+      font-size: 0.88rem;
+      margin-bottom: 1px;
+    }
+
+    .author-info p {
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    /* ============================================================
+   TECHNOLOGY STACK
+   ============================================================ */
+    .tech-section {
+      background: var(--charcoal);
+    }
+
+    .tech-section .section-label {
+      color: var(--sage-light);
+    }
+
+    .tech-section h2 {
+      color: white;
+    }
+
+    .tech-section .section-header p {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .tech-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: var(--transition);
+    }
+
+    .tech-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(124, 154, 126, 0.3);
+    }
+
+    .tech-cat {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      margin-bottom: 10px;
+    }
+
+    .tech-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .tech-desc {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* ============================================================
+   DB SCHEMA
+   ============================================================ */
+    .schema-section {
+      background: var(--cream);
+    }
+
+    .schema-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .schema-table {
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(28, 28, 30, 0.06);
+    }
+
+    .schema-table-header {
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      padding: 14px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .schema-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-bottom: 1px solid rgba(28, 28, 30, 0.05);
+      font-size: 0.8rem;
+    }
+
+    .schema-field:last-child {
+      border-bottom: none;
+    }
+
+    .field-name {
+      font-family: var(--font-mono);
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+
+    .field-type {
+      color: var(--clay);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .field-pk {
+      color: var(--gold);
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(201, 168, 76, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .field-fk {
+      color: var(--sage-dark);
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(124, 154, 126, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ============================================================
+   AI MATCHING EXPLANATION
+   ============================================================ */
+    .ai-logic-section {
+      background: var(--warm-white);
+    }
+
+    .ai-pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 760px;
+    }
+
+    .pipeline-step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .pipeline-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .pipeline-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+
+    .pipeline-line {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(180deg, var(--sage-light), transparent);
+      margin-top: 4px;
+    }
+
+    .pipeline-content {
+      padding-top: 6px;
+    }
+
+    .pipeline-content h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .pipeline-content p {
+      font-size: 0.88rem;
+      color: #666;
+    }
+
+    .weight-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .weight-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--mist);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .weight-chip strong {
+      color: var(--sage-dark);
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================================
+   FOOTER / CTA
+   ============================================================ */
+    .cta-section {
+      background: linear-gradient(135deg, var(--sage-dark) 0%, #2A4A2C 100%);
+      text-align: center;
+      padding: 96px 5%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+    }
+
+    .cta-section h2 {
+      color: white;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-section p {
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-section .btn-cta {
+      background: white;
+      color: var(--sage-dark);
+      font-weight: 700;
+      padding: 16px 40px;
+      font-size: 1rem;
+      border-radius: 100px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      transition: var(--transition);
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .cta-section .btn-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.30);
+    }
+
+    footer {
+      background: var(--charcoal);
+      padding: 56px 5% 32px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 12px;
+      max-width: 280px;
+      line-height: 1.7;
+    }
+
+    .footer-col h4 {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--sage-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ============================================================
+   CHAT WIDGET
+   ============================================================ */
+    .chat-fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(74, 107, 76, 0.40);
+      z-index: 999;
+      transition: var(--transition);
+      border: none;
+      color: white;
+    }
+
+    .chat-fab:hover {
+      transform: scale(1.1);
+    }
+
+    /* ============================================================
+   NOTIFICATION TOAST
+   ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      right: 28px;
+      background: var(--charcoal);
+      color: white;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ============================================================
+   RESPONSIVE
+   ============================================================ */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 4%;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 100px 4% 60px;
+      }
+
+      section {
+        padding: 64px 4%;
+      }
+
+      .quiz-container {
+        padding: 28px 20px;
+      }
+
+      .detail-body {
+        padding: 20px;
+      }
+    }
+
+    /* ============================================================
+   SCROLL ANIMATIONS
+   ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* ============================================================
+   AUTH & PROFILE MODALS
+   ============================================================ */
+    .auth-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 28, 30, 0.65);
+      z-index: 2500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-modal-backdrop.open {
+      display: flex;
+    }
+
+    .auth-modal {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 440px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+
+    .profile-modal {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 700px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: var(--mist);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: var(--transition);
+    }
+
+    .modal-close-btn:hover {
+      background: #ddd;
+      transform: scale(1.1);
+    }
+
+    .profile-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      margin-top: 24px;
+      border-bottom: 1px solid var(--mist);
+      padding-bottom: 8px;
+      color: var(--sage-dark);
+    }
+
+    .profile-flex {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+  </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800">
+<body>
 
-<!-- NAVBAR -->
-<header class="fixed top-0 left-0 right-0 bg-white shadow z-50">
-<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-<h1 class="text-xl font-bold text-indigo-600">AI Lifestyle Matching Kos</h1>
+  <!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+  <nav id="navbar">
+    <div class="nav-logo">
+      <div class="logo-icon">🏠</div>
+      KosMatch<span style="color:var(--sage)">AI</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#listings">Browse Kos</a></li>
+      <li><a href="#quiz">AI Quiz</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#tech">Tech Stack</a></li>
+    </ul>
+    <div class="nav-cta" id="authNav">
+      <button class="btn btn-ghost" onclick="openAuthModal('loginModal')">Login</button>
+      <button class="btn btn-primary" onclick="openAuthModal('registerModal')">Get Started</button>
+    </div>
+    <div class="nav-cta" id="userNav" style="display:none">
+      <button class="btn btn-ghost" onclick="openAuthModal('profileModal')">Profile</button>
+      <button class="btn btn-primary" onclick="logout()">Logout</button>
+    </div>
+  </nav>
 
-<nav class="hidden md:flex gap-6 text-sm">
-<a href="#home">Home</a>
-<a href="#features">Features</a>
-<a href="#quiz">AI Quiz</a>
-<a href="#listing">Listings</a>
-<a href="#dashboard">Dashboard</a>
-</nav>
+  <!-- ============================================================
+     HERO
+     ============================================================ -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse"></span>
+        AI-Powered Matching · Indonesia
+      </div>
+      <h1>Find Your <em>Perfect</em><br>Kos with AI</h1>
+      <p class="hero-desc">Answer a few lifestyle questions and our AI matches you with boarding houses that fit your
+        habits, personality, budget, and commute needs — in seconds.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="scrollToQuiz()">
+          🎯 Start AI Matching
+        </button>
+        <button class="btn btn-ghost btn-lg"
+          onclick="document.getElementById('listings').scrollIntoView({behavior:'smooth'})">
+          Browse All Kos
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>12,400+</strong>
+          <span>Listed properties</span>
+        </div>
+        <div class="hero-stat">
+          <strong>94%</strong>
+          <span>Match accuracy</span>
+        </div>
+        <div class="hero-stat">
+          <strong>8,200+</strong>
+          <span>Happy tenants</span>
+        </div>
+      </div>
+    </div>
 
-<div class="flex gap-2">
-<button onclick="toggleDark()" class="px-4 py-2 bg-slate-800 text-white rounded-xl">Mode</button>
-<button onclick="login()" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">Login</button>
-</div>
-</div>
-</header>
+    <!-- Floating kos cards -->
+    <div class="hero-visual">
+      <div class="kos-card">
+        <div class="kos-card-img-placeholder" style="background:linear-gradient(135deg,#d4e8d5,#a8c5aa)">🏡</div>
+        <div class="kos-card-body">
+          <h4>Kos Harmoni Baru</h4>
+          <p>📍 Dago, Bandung</p>
+          <span class="match-badge">98% Match</span>
+        </div>
+      </div>
+      <div class="kos-card">
+        <div class="kos-card-img-placeholder" style="background:linear-gradient(135deg,#e8d5c4,#c4845a40)">🏠</div>
+        <div class="kos-card-body">
+          <h4>Kos Sejahtera</h4>
+          <p>📍 Setiabudi, Bandung</p>
+          <span class="match-badge">92% Match</span>
+        </div>
+      </div>
+      <div class="kos-card featured" style="grid-column:1/3">
+        <div class="kos-card-img-placeholder"
+          style="background:linear-gradient(135deg,#c4d5e8,#8aaac4);width:100px;flex-shrink:0">🏘️</div>
+        <div class="kos-card-body">
+          <h4>Kos Premiere Dago</h4>
+          <p>📍 Dago Atas · Rp 1.8jt/bulan</p>
+          <p style="font-size:0.75rem;color:#555;margin-bottom:6px">AC, WiFi, Dapur Bersama, Parkir</p>
+          <span class="match-badge">95% Lifestyle Match</span>
+        </div>
+      </div>
+      <div class="kos-card">
+        <div class="kos-card-img-placeholder" style="background:linear-gradient(135deg,#e8e4d5,#c4b88a40)">🏢</div>
+        <div class="kos-card-body">
+          <h4>Griya Mahasiswa</h4>
+          <p>📍 Cisitu, Bandung</p>
+          <span class="match-badge">89% Match</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- HERO -->
-<section id="home" class="pt-32 pb-20 px-6">
-<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+  <!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+  <section class="how-it-works" id="howitworks">
+    <div class="section-header reveal">
+      <div class="section-label">How It Works</div>
+      <h2>Find your kos in 3 steps</h2>
+      <p>Our AI does the heavy lifting — no more endless scrolling through irrelevant listings.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <div class="step-icon">📋</div>
+        <h3>Answer Lifestyle Quiz</h3>
+        <p>Tell us about your daily routines, sleep schedule, hobbies, cleanliness standards, and social preferences.
+        </p>
+      </div>
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-number">02</div>
+        <div class="step-icon">🤖</div>
+        <h3>AI Analyzes & Matches</h3>
+        <p>Our machine learning model scores every property against your lifestyle profile using weighted multi-criteria
+          analysis.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-number">03</div>
+        <div class="step-icon">✅</div>
+        <h3>Book Your Perfect Kos</h3>
+        <p>Browse your personalized results, chat with owners, and submit a booking request — all in one platform.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-number">04</div>
+        <div class="step-icon">👥</div>
+        <h3>Find Compatible Roommates</h3>
+        <p>Optionally match with roommates who share similar lifestyles and habits for a harmonious living experience.
+        </p>
+      </div>
+    </div>
+  </section>
 
-<div>
-<h2 class="text-5xl font-bold leading-tight mb-6">
-Find Kost Based on <span class="text-indigo-600">Your Lifestyle</span>
-</h2>
+  <!-- ============================================================
+     AI QUIZ
+     ============================================================ -->
+  <section class="quiz-section" id="quiz">
+    <div class="quiz-inner">
+      <div class="section-header reveal">
+        <div class="section-label">AI Lifestyle Quiz</div>
+        <h2>Let's build your profile</h2>
+        <p>Your answers train our AI to find kos that truly fits your life — not just your budget.</p>
+      </div>
+      <div class="quiz-container reveal">
+        <div class="quiz-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="quizProgress"></div>
+          </div>
+          <span class="progress-text" id="quizStep">2 / 5</span>
+        </div>
+        <div class="quiz-question" id="quizQuestion">What best describes your sleep schedule?</div>
+        <div class="quiz-options" id="quizOptions">
+          <div class="quiz-option" onclick="selectOption(this)">
+            <span class="opt-icon">🌙</span>
+            <span>Night owl (sleep after midnight)</span>
+          </div>
+          <div class="quiz-option" onclick="selectOption(this)">
+            <span class="opt-icon">🌅</span>
+            <span>Early bird (sleep before 10 PM)</span>
+          </div>
+          <div class="quiz-option" onclick="selectOption(this)">
+            <span class="opt-icon">🕙</span>
+            <span>Moderate (10 PM–12 AM)</span>
+          </div>
+          <div class="quiz-option" onclick="selectOption(this)">
+            <span class="opt-icon">🎲</span>
+            <span>Varies day to day</span>
+          </div>
+        </div>
+        <div class="quiz-actions">
+          <button class="btn btn-ghost" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6)"
+            onclick="prevQuestion()">← Back</button>
+          <button class="btn btn-primary" onclick="nextQuestion()">Continue →</button>
+          <button class="btn btn-clay"
+            onclick="showToast('🎉 AI Match complete! Showing your top 12 kos matches.')">Skip to Results</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<p class="text-lg text-slate-600 mb-8">
-AI matches rooms based on personality, habits, cleanliness, budget, commute, and vibe.
-</p>
+  <!-- ============================================================
+     PROPERTY LISTINGS
+     ============================================================ -->
+  <section class="listings-section" id="listings">
+    <div class="section-header reveal">
+      <div class="section-label">Browse Properties</div>
+      <h2>Top AI-matched kos for you</h2>
+      <p>Sorted by lifestyle compatibility score based on your quiz responses.</p>
+    </div>
+    <div class="filter-bar reveal">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search by location, name, or feature..." />
+      </div>
+      <div class="filter-chip active">All</div>
+      <div class="filter-chip">Putri</div>
+      <div class="filter-chip">Putra</div>
+      <div class="filter-chip">Campur</div>
+      <div class="filter-chip">&lt; Rp 1jt</div>
+      <div class="filter-chip">1–2jt</div>
+      <div class="filter-chip">&gt; 2jt</div>
+      <div class="filter-chip">Dekat Kampus</div>
+    </div>
+    <div class="property-grid">
 
-<div class="flex gap-4">
-<a href="#quiz" class="px-6 py-3 bg-indigo-600 text-white rounded-2xl">Start AI Quiz</a>
-<a href="#listing" class="px-6 py-3 border rounded-2xl">Browse Rooms</a>
-</div>
-</div>
+      <div class="property-card reveal" onclick="openDetail('kos1')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#d4e8d5,#a8c5aa)">
+          🏡
+          <span class="ai-badge">⭐ 98% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Dago, Bandung · 2 km dari ITB</div>
+          <h3>Kos Harmoni Premium Dago</h3>
+          <div class="property-tags">
+            <span class="tag">AC</span>
+            <span class="tag">WiFi 50Mbps</span>
+            <span class="tag">Dapur</span>
+            <span class="tag">CCTV</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 2.2jt <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>98% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-<div class="bg-white rounded-3xl shadow-xl p-8">
-<h3 class="text-xl font-bold mb-5">Today's Best Match</h3>
+      <div class="property-card reveal reveal-delay-1" onclick="openDetail('kos2')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#e8d5c4,#c4a08a)">
+          🏠
+          <span class="ai-badge">⭐ 95% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Setiabudi, Bandung · 1.5 km dari UNPAD</div>
+          <h3>Kos Nyaman Setiabudi</h3>
+          <div class="property-tags">
+            <span class="tag">AC</span>
+            <span class="tag">Laundry</span>
+            <span class="tag">Parkir Motor</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 1.7jt <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>95% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-<div class="space-y-4">
-<div class="p-4 rounded-xl bg-green-100">Quiet Studio • 96% Match</div>
-<div class="p-4 rounded-xl bg-blue-100">Urban Loft • 92% Match</div>
-<div class="p-4 rounded-xl bg-purple-100">Creative House • 88% Match</div>
-</div>
-</div>
+      <div class="property-card reveal reveal-delay-2" onclick="openDetail('kos3')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#d5dce8,#8a9ac4)">
+          🏢
+          <span class="ai-badge">⭐ 92% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Cisitu, Bandung · 800m dari ITB</div>
+          <h3>Griya Mahasiswa Cisitu</h3>
+          <div class="property-tags">
+            <span class="tag">Hemat</span>
+            <span class="tag">WiFi</span>
+            <span class="tag">Komunitas</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 950rb <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>92% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-</div>
-</section>
+      <div class="property-card reveal reveal-delay-3" onclick="openDetail('kos4')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#e8e4d5,#c4b88a)">
+          🏘️
+          <span class="ai-badge">⭐ 89% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Antapani, Bandung · Dekat Mall</div>
+          <h3>Kos Modern Antapani</h3>
+          <div class="property-tags">
+            <span class="tag">AC</span>
+            <span class="tag">Smart Lock</span>
+            <span class="tag">Gym</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 2.8jt <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>89% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-<!-- FEATURES -->
-<section id="features" class="py-20 px-6 bg-white">
-<div class="max-w-7xl mx-auto">
+      <div class="property-card reveal" onclick="openDetail('kos5')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#e8d5e0,#c48aa8)">
+          🌺
+          <span class="ai-badge">⭐ 87% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Buah Batu, Bandung · Tenang & Asri</div>
+          <h3>Kos Putri Buah Batu</h3>
+          <div class="property-tags">
+            <span class="tag">Putri</span>
+            <span class="tag">Taman</span>
+            <span class="tag">Masak</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 1.4jt <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>87% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-<h3 class="text-4xl font-bold text-center mb-12">Premium Features</h3>
+      <div class="property-card reveal reveal-delay-1" onclick="openDetail('kos6')">
+        <div class="kos-card-img-placeholder property-card-img"
+          style="background:linear-gradient(135deg,#d5e8e4,#8ac4b8)">
+          🌿
+          <span class="ai-badge">⭐ 85% Match</span>
+          <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this)">🤍</button>
+        </div>
+        <div class="property-card-body">
+          <div class="location">📍 Lembang, Bandung · Udara Sejuk</div>
+          <h3>Kos Alam Lembang</h3>
+          <div class="property-tags">
+            <span class="tag">Alam</span>
+            <span class="tag">Sejuk</span>
+            <span class="tag">Tenang</span>
+          </div>
+          <div class="property-footer">
+            <div class="price">Rp 1.1jt <span>/bulan</span></div>
+            <div class="match-score"><span class="match-dot"></span>85% Cocok</div>
+          </div>
+        </div>
+      </div>
 
-<div class="grid md:grid-cols-4 gap-6">
+    </div>
+  </section>
 
-<div class="card p-6 shadow rounded-3xl">AI Lifestyle Matching</div>
-<div class="card p-6 shadow rounded-3xl">Roommate Finder</div>
-<div class="card p-6 shadow rounded-3xl">Smart Search Filter</div>
-<div class="card p-6 shadow rounded-3xl">Google Maps Nearby</div>
+  <!-- ============================================================
+     ROOMMATE MATCHING
+     ============================================================ -->
+  <section class="roommate-section" id="roommate">
+    <div class="roommate-grid">
+      <div class="reveal">
+        <div class="section-label">Roommate Matching</div>
+        <h2>Find your ideal roommate</h2>
+        <p style="margin-bottom:28px">Our AI cross-matches user lifestyle profiles to identify the most compatible
+          roommate candidates — reducing conflict and improving shared living harmony.</p>
+        <button class="btn btn-primary"
+          onclick="showToast('🤝 Roommate finder activated! Scanning 342 compatible profiles...')">Find My
+          Roommate</button>
+      </div>
+      <div class="compatibility-cards reveal reveal-delay-1">
+        <div class="compat-card">
+          <div class="avatar" style="background:#d4e8d5">🧑‍💻</div>
+          <div class="compat-info">
+            <h4>Rizky A.</h4>
+            <p>Mahasiswa Teknik · Night owl · Rapi</p>
+            <div class="compat-bar">
+              <div class="compat-fill" style="width:94%"></div>
+            </div>
+          </div>
+          <div class="compat-pct">94%</div>
+        </div>
+        <div class="compat-card">
+          <div class="avatar" style="background:#e8d5c4">👩‍🎨</div>
+          <div class="compat-info">
+            <h4>Siti N.</h4>
+            <p>Desainer · Sosial sedang · Hobi memasak</p>
+            <div class="compat-bar">
+              <div class="compat-fill" style="width:88%"></div>
+            </div>
+          </div>
+          <div class="compat-pct">88%</div>
+        </div>
+        <div class="compat-card">
+          <div class="avatar" style="background:#d5dce8">👨‍⚕️</div>
+          <div class="compat-info">
+            <h4>Budi S.</h4>
+            <p>Koas Kedokteran · Early bird · Tenang</p>
+            <div class="compat-bar">
+              <div class="compat-fill" style="width:81%"></div>
+            </div>
+          </div>
+          <div class="compat-pct">81%</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="card p-6 shadow rounded-3xl">Booking System</div>
-<div class="card p-6 shadow rounded-3xl">Online Payment</div>
-<div class="card p-6 shadow rounded-3xl">Owner Dashboard</div>
-<div class="card p-6 shadow rounded-3xl">Rewards System</div>
+  <!-- ============================================================
+     FEATURES
+     ============================================================ -->
+  <section class="features-section" id="features">
+    <div class="section-header reveal">
+      <div class="section-label">Platform Features</div>
+      <h2>Everything you need<br>in one place</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#d4e8d5,#a8c5aa)">🤖</div>
+        <h3>AI Lifestyle Matching</h3>
+        <p>Multi-criteria weighted scoring model matches you with properties based on 12+ lifestyle parameters.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#e8d5c4,#c4a08a)">🗺️</div>
+        <h3>Location-Based Search</h3>
+        <p>Filter by proximity to campus, workplace, public transport, or landmarks with map integration.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#d5dce8,#8a9ac4)">📅</div>
+        <h3>Booking Request System</h3>
+        <p>Submit booking requests with move-in date, duration, and a personal note to the owner. Track status in
+          real-time.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#e8e4d5,#c4b88a)">💬</div>
+        <h3>In-App Messaging</h3>
+        <p>Chat directly with property owners before committing. Ask questions, negotiate, and build trust.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#e8d5e0,#c48aa8)">❤️</div>
+        <h3>Favorites & Shortlist</h3>
+        <p>Save properties to your personal shortlist and compare them side-by-side before making a decision.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#d5e8e4,#8ac4b8)">📊</div>
+        <h3>Owner Analytics Dashboard</h3>
+        <p>Property owners get real-time insights: view count, booking conversion rate, tenant demographics, and revenue
+          tracking.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#d4e8d5,#a8c5aa)">🛡️</div>
+        <h3>Verified Listings</h3>
+        <p>Admin-verified property photos, owner identity, and facility claims for a trustworthy browsing experience.
+        </p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#e8d5c4,#c4a08a)">👥</div>
+        <h3>Roommate Compatibility</h3>
+        <p>Optional roommate finder cross-matches habits, personality, and daily routines across all registered users.
+        </p>
+      </div>
+    </div>
+  </section>
 
-</div>
-</div>
-</section>
+  <!-- ============================================================
+     DASHBOARD PREVIEW
+     ============================================================ -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="section-header reveal">
+      <div class="section-label">Dashboard Preview</div>
+      <h2>Control center for every role</h2>
+      <p>Separate, purpose-built dashboards for tenants, property owners, and platform administrators.</p>
+    </div>
+    <div class="dashboard-tabs reveal">
+      <button class="dash-tab active" onclick="switchDash('user', this)">👤 Tenant</button>
+      <button class="dash-tab" onclick="switchDash('owner', this)">🏠 Owner</button>
+      <button class="dash-tab" onclick="switchDash('admin', this)">⚙️ Admin</button>
+    </div>
 
-<!-- QUIZ -->
-<section id="quiz" class="py-20 px-6">
-<div class="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10">
+    <!-- Tenant Dashboard -->
+    <div class="dashboard-preview active reveal" id="dash-user">
+      <div class="dash-header">
+        <div>
+          <h3>Welcome back, Andi! 👋</h3>
+          <p style="font-size:0.85rem;color:#888">Your AI match score: <strong style="color:var(--sage-dark)">94%
+              accuracy</strong></p>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('Quiz updated! Refreshing matches...')">Re-run Quiz</button>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="label">Saved Kos</div>
+          <div class="value">7</div>
+          <div class="trend">↑ 2 this week</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Booking Requests</div>
+          <div class="value">3</div>
+          <div class="trend">1 awaiting reply</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Unread Messages</div>
+          <div class="value">5</div>
+          <div class="trend">2 from owners</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Match Score</div>
+          <div class="value">94%</div>
+          <div class="trend">↑ Profile complete</div>
+        </div>
+      </div>
+      <h4 style="margin-bottom:14px;font-size:0.9rem;color:#888;text-transform:uppercase;letter-spacing:0.08em">Recent
+        Activity</h4>
+      <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#d4e8d5">🏡</div>
+          <div class="recent-info">
+            <h4>Booking — Kos Harmoni Dago</h4>
+            <p>Submitted 2 jam lalu · Move-in: 1 Juni 2025</p>
+          </div>
+          <span class="status-badge status-pending">Pending</span>
+        </div>
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#e8e4d5">🏠</div>
+          <div class="recent-info">
+            <h4>Booking — Kos Setiabudi</h4>
+            <p>Submitted 1 hari lalu · Move-in: 15 Mei 2025</p>
+          </div>
+          <span class="status-badge status-confirmed">Confirmed</span>
+        </div>
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#e8d5d5">🏢</div>
+          <div class="recent-info">
+            <h4>Booking — Griya Cisitu</h4>
+            <p>Submitted 3 hari lalu</p>
+          </div>
+          <span class="status-badge status-rejected">Not Available</span>
+        </div>
+      </div>
+    </div>
 
-<h3 class="text-3xl font-bold mb-8">AI Lifestyle Quiz</h3>
+    <!-- Owner Dashboard -->
+    <div class="dashboard-preview" id="dash-owner">
+      <div class="dash-header">
+        <div>
+          <h3>Owner Panel — Pak Budi 🏠</h3>
+          <p style="font-size:0.85rem;color:#888">2 properties listed · 89% occupancy rate</p>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('Add property form opening...')">+ Add Property</button>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="label">Total Listings</div>
+          <div class="value">2</div>
+          <div class="trend">Both verified ✓</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Active Tenants</div>
+          <div class="value">16</div>
+          <div class="trend">↑ 3 this month</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Revenue (Mei)</div>
+          <div class="value" style="font-size:1.3rem">Rp 27jt</div>
+          <div class="trend">↑ +12% vs April</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Pending Requests</div>
+          <div class="value">4</div>
+          <div class="trend">Reply within 24h</div>
+        </div>
+      </div>
+      <h4 style="margin-bottom:14px;font-size:0.9rem;color:#888;text-transform:uppercase;letter-spacing:0.08em">Incoming
+        Booking Requests</h4>
+      <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#d4e8d5">👤</div>
+          <div class="recent-info">
+            <h4>Andi Rahman → Kos Harmoni Dago</h4>
+            <p>Move-in: 1 Juni · 94% lifestyle match · Durasi: 6 bulan</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('✅ Booking confirmed!')">Confirm</button>
+            <button class="btn btn-ghost" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('Booking declined.')">Decline</button>
+          </div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#e8d5c4">👤</div>
+          <div class="recent-info">
+            <h4>Siti Nuraini → Kos Harmoni Dago</h4>
+            <p>Move-in: 10 Juni · 88% lifestyle match · Durasi: 12 bulan</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('✅ Booking confirmed!')">Confirm</button>
+            <button class="btn btn-ghost" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('Booking declined.')">Decline</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="grid md:grid-cols-2 gap-5">
+    <!-- Admin Dashboard -->
+    <div class="dashboard-preview" id="dash-admin">
+      <div class="dash-header">
+        <div>
+          <h3>Admin Control Panel ⚙️</h3>
+          <p style="font-size:0.85rem;color:#888">Platform health: <strong style="color:var(--success)">All systems
+              operational</strong></p>
+        </div>
+        <button class="btn btn-clay" onclick="showToast('Generating platform report...')">Export Report</button>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="label">Total Users</div>
+          <div class="value">8,247</div>
+          <div class="trend">↑ +234 this week</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Properties Listed</div>
+          <div class="value">12,4k</div>
+          <div class="trend">↑ +56 today</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Pending Verif.</div>
+          <div class="value">38</div>
+          <div class="trend">Review needed</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="label">Reports / Flags</div>
+          <div class="value">6</div>
+          <div class="trend">3 high priority</div>
+        </div>
+      </div>
+      <h4 style="margin-bottom:14px;font-size:0.9rem;color:#888;text-transform:uppercase;letter-spacing:0.08em">Pending
+        Verifications</h4>
+      <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-icon" style="background:#d4e8d5">🏡</div>
+          <div class="recent-info">
+            <h4>Kos Baru Margahayu — Owner: Ibu Yati</h4>
+            <p>Submitted: 2 jam lalu · 8 photos · KTP verified</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('✅ Property approved and listed!')">Approve</button>
+            <button class="btn btn-ghost" style="padding:6px 14px;font-size:0.78rem"
+              onclick="showToast('Property sent back for revision.')">Revise</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<input id="budget" placeholder="Budget (Rp)" class="p-4 border rounded-xl">
+  <!-- ============================================================
+     TECHNOLOGY STACK
+     ============================================================ -->
+  <section class="tech-section" id="tech">
+    <div class="section-header reveal">
+      <div class="section-label">Technology Stack</div>
+      <h2>Built for scale & speed</h2>
+      <p>Production-grade stack chosen for performance, developer experience, and Southeast Asian infrastructure needs.
+      </p>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech-card">
+        <div class="tech-cat">Frontend</div>
+        <div class="tech-name">Next.js 14</div>
+        <div class="tech-desc">App Router, SSR/SSG, React Server Components</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Styling</div>
+        <div class="tech-name">Tailwind CSS + shadcn/ui</div>
+        <div class="tech-desc">Utility-first with accessible component library</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Backend</div>
+        <div class="tech-name">Node.js + Express</div>
+        <div class="tech-desc">RESTful API with structured MVC architecture</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Database</div>
+        <div class="tech-name">PostgreSQL + Prisma ORM</div>
+        <div class="tech-desc">Relational DB with type-safe query builder</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Cache</div>
+        <div class="tech-name">Redis</div>
+        <div class="tech-desc">Session management, search caching, rate limiting</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Authentication</div>
+        <div class="tech-name">NextAuth.js + JWT</div>
+        <div class="tech-desc">OAuth (Google), email/password, role-based access</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">AI / ML</div>
+        <div class="tech-name">Python FastAPI + scikit-learn</div>
+        <div class="tech-desc">Cosine similarity, collaborative filtering, scoring</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Maps</div>
+        <div class="tech-name">Google Maps API</div>
+        <div class="tech-desc">Location search, commute time, geocoding</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Storage</div>
+        <div class="tech-name">AWS S3 / Cloudflare R2</div>
+        <div class="tech-desc">Property images, documents, media files</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Realtime</div>
+        <div class="tech-name">Socket.io</div>
+        <div class="tech-desc">Live chat, booking notifications, status updates</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Email</div>
+        <div class="tech-name">Resend / Nodemailer</div>
+        <div class="tech-desc">Transactional emails, booking confirmations</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-cat">Hosting</div>
+        <div class="tech-name">Vercel + Railway</div>
+        <div class="tech-desc">Frontend on Vercel, API + DB on Railway</div>
+      </div>
+    </div>
+  </section>
 
-<select id="sleep" class="p-4 border rounded-xl">
-<option>Night Owl</option>
-<option>Early Sleeper</option>
-</select>
+  <!-- ============================================================
+     DATABASE SCHEMA
+     ============================================================ -->
+  <section class="schema-section">
+    <div class="section-header reveal">
+      <div class="section-label">Database Design</div>
+      <h2>Schema overview</h2>
+      <p>PostgreSQL relational schema designed for normalized data integrity and efficient AI query access.</p>
+    </div>
+    <div class="schema-grid">
 
-<select id="clean" class="p-4 border rounded-xl">
-<option>High Cleanliness</option>
-<option>Medium</option>
-<option>Low</option>
-</select>
+      <div class="schema-table reveal">
+        <div class="schema-table-header">👤 users</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="schema-field"><span class="field-name">email</span><span class="field-type">VARCHAR UNIQUE</span>
+        </div>
+        <div class="schema-field"><span class="field-name">password_hash</span><span class="field-type">TEXT</span>
+        </div>
+        <div class="schema-field"><span class="field-name">role</span><span
+            class="field-type">ENUM(tenant,owner,admin)</span></div>
+        <div class="schema-field"><span class="field-name">avatar_url</span><span class="field-type">TEXT</span></div>
+        <div class="schema-field"><span class="field-name">verified_at</span><span class="field-type">TIMESTAMP</span>
+        </div>
+        <div class="schema-field"><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span>
+        </div>
+      </div>
 
-<select id="personality" class="p-4 border rounded-xl">
-<option>Introvert</option>
-<option>Extrovert</option>
-</select>
+      <div class="schema-table reveal reveal-delay-1">
+        <div class="schema-table-header">🏠 properties</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">owner_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">name</span><span class="field-type">VARCHAR(200)</span></div>
+        <div class="schema-field"><span class="field-name">type</span><span
+            class="field-type">ENUM(putra,putri,campur)</span></div>
+        <div class="schema-field"><span class="field-name">price_monthly</span><span class="field-type">INTEGER</span>
+        </div>
+        <div class="schema-field"><span class="field-name">latitude / longitude</span><span
+            class="field-type">DECIMAL</span></div>
+        <div class="schema-field"><span class="field-name">amenities</span><span class="field-type">JSONB</span></div>
+        <div class="schema-field"><span class="field-name">is_verified</span><span class="field-type">BOOLEAN</span>
+        </div>
+      </div>
 
-<input id="distance" placeholder="Max commute km" class="p-4 border rounded-xl">
+      <div class="schema-table reveal reveal-delay-2">
+        <div class="schema-table-header">📋 preferences</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">user_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">sleep_schedule</span><span class="field-type">ENUM</span>
+        </div>
+        <div class="schema-field"><span class="field-name">cleanliness_level</span><span
+            class="field-type">SMALLINT(1-5)</span></div>
+        <div class="schema-field"><span class="field-name">social_preference</span><span class="field-type">ENUM</span>
+        </div>
+        <div class="schema-field"><span class="field-name">budget_min/max</span><span class="field-type">INTEGER</span>
+        </div>
+        <div class="schema-field"><span class="field-name">hobbies</span><span class="field-type">TEXT[]</span></div>
+        <div class="schema-field"><span class="field-name">commute_mode</span><span class="field-type">ENUM</span></div>
+      </div>
 
-<select id="type" class="p-4 border rounded-xl">
-<option>Private Room</option>
-<option>Need Roommate</option>
-</select>
+      <div class="schema-table reveal">
+        <div class="schema-table-header">🎯 matches</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">user_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">property_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→properties</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">score</span><span class="field-type">DECIMAL(5,2)</span>
+        </div>
+        <div class="schema-field"><span class="field-name">score_breakdown</span><span class="field-type">JSONB</span>
+        </div>
+        <div class="schema-field"><span class="field-name">generated_at</span><span class="field-type">TIMESTAMP</span>
+        </div>
+      </div>
 
-</div>
+      <div class="schema-table reveal reveal-delay-1">
+        <div class="schema-table-header">📅 bookings</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">tenant_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">property_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→properties</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">move_in_date</span><span class="field-type">DATE</span></div>
+        <div class="schema-field"><span class="field-name">duration_months</span><span
+            class="field-type">SMALLINT</span></div>
+        <div class="schema-field"><span class="field-name">status</span><span
+            class="field-type">ENUM(pending,confirmed,rejected,cancelled)</span></div>
+        <div class="schema-field"><span class="field-name">note</span><span class="field-type">TEXT</span></div>
+      </div>
 
-<button onclick="generateAI()" class="mt-8 px-6 py-3 bg-indigo-600 text-white rounded-2xl">
-Generate Match
-</button>
+      <div class="schema-table reveal reveal-delay-2">
+        <div class="schema-table-header">💬 messages</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">sender_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">receiver_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">property_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→properties</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">content</span><span class="field-type">TEXT</span></div>
+        <div class="schema-field"><span class="field-name">read_at</span><span class="field-type">TIMESTAMP</span></div>
+        <div class="schema-field"><span class="field-name">sent_at</span><span class="field-type">TIMESTAMP</span></div>
+      </div>
 
-<div id="result" class="mt-6 text-lg font-bold text-indigo-600"></div>
+      <div class="schema-table reveal">
+        <div class="schema-table-header">❤️ favorites</div>
+        <div class="schema-field"><span class="field-name">id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-pk">PK</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">user_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→users</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">property_id</span>
+          <div style="display:flex;gap:6px;align-items:center"><span class="field-type">UUID</span><span
+              class="field-fk">FK→properties</span></div>
+        </div>
+        <div class="schema-field"><span class="field-name">created_at</span><span class="field-type">TIMESTAMP</span>
+        </div>
+      </div>
 
-</div>
-</section>
+    </div>
+  </section>
 
-<!-- LISTING -->
-<section id="listing" class="py-20 px-6 bg-white">
-<div class="max-w-7xl mx-auto">
+  <!-- ============================================================
+     AI MATCHING LOGIC
+     ============================================================ -->
+  <section class="ai-logic-section" id="ailogic">
+    <div class="section-header reveal">
+      <div class="section-label">AI Matching Engine</div>
+      <h2>How the algorithm works</h2>
+      <p>A multi-criteria weighted scoring pipeline that produces a 0–100 compatibility score for every user-property
+        pair.</p>
+    </div>
+    <div class="ai-pipeline">
+      <div class="pipeline-step reveal">
+        <div class="pipeline-connector">
+          <div class="pipeline-dot">01</div>
+          <div class="pipeline-line"></div>
+        </div>
+        <div class="pipeline-content">
+          <h4>Input Collection — Lifestyle Quiz</h4>
+          <p>User answers 12 questions covering sleep schedule, cleanliness level (1–5), social preference, hobbies,
+            noise tolerance, cooking habits, commute mode, and budget range. Responses are normalized into a feature
+            vector.</p>
+        </div>
+      </div>
+      <div class="pipeline-step reveal reveal-delay-1">
+        <div class="pipeline-connector">
+          <div class="pipeline-dot">02</div>
+          <div class="pipeline-line"></div>
+        </div>
+        <div class="pipeline-content">
+          <h4>Property Profile Encoding</h4>
+          <p>Each property is encoded with attributes from owner input and AI-extracted tags: noise level
+            (quiet/moderate/lively), tenant community type, facility tags, location category, and verified amenities.
+          </p>
+        </div>
+      </div>
+      <div class="pipeline-step reveal reveal-delay-2">
+        <div class="pipeline-connector">
+          <div class="pipeline-dot">03</div>
+          <div class="pipeline-line"></div>
+        </div>
+        <div class="pipeline-content">
+          <h4>Weighted Cosine Similarity Scoring</h4>
+          <p>The AI engine computes cosine similarity between user preference vectors and property attribute vectors.
+            Each dimension carries a different weight:</p>
+          <div class="weight-chips">
+            <div class="weight-chip"><strong>25%</strong> Budget fit</div>
+            <div class="weight-chip"><strong>20%</strong> Location/commute</div>
+            <div class="weight-chip"><strong>15%</strong> Sleep schedule</div>
+            <div class="weight-chip"><strong>15%</strong> Social vibe</div>
+            <div class="weight-chip"><strong>10%</strong> Cleanliness</div>
+            <div class="weight-chip"><strong>10%</strong> Noise tolerance</div>
+            <div class="weight-chip"><strong>5%</strong> Hobbies alignment</div>
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-step reveal reveal-delay-3">
+        <div class="pipeline-connector">
+          <div class="pipeline-dot">04</div>
+          <div class="pipeline-line"></div>
+        </div>
+        <div class="pipeline-content">
+          <h4>Collaborative Filtering Boost</h4>
+          <p>Properties that users with similar profiles have booked and rated highly receive a collaborative filtering
+            score boost, improving recommendations over time as platform data grows.</p>
+        </div>
+      </div>
+      <div class="pipeline-step reveal">
+        <div class="pipeline-connector">
+          <div class="pipeline-dot">05</div>
+        </div>
+        <div class="pipeline-content">
+          <h4>Ranked Output & Score Explanation</h4>
+          <p>Final scores are ranked, deduplicated, and served via API with a per-dimension breakdown (e.g., "Budget:
+            98%, Location: 91%, Sleep: 85%") so users understand why each property was recommended.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h3 class="text-4xl font-bold text-center mb-12">Recommended Listings</h3>
+  <!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+  <section class="testimonials-section">
+    <div class="section-header reveal">
+      <div class="section-label">Testimonials</div>
+      <h2>What tenants say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The AI quiz was surprisingly accurate. It recommended a kos I wouldn't have found
+          on my own — and it's perfect. The quiet environment matches my study habits exactly."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#d4e8d5">🧑‍💻</div>
+          <div class="author-info">
+            <h4>Rizky Aditya</h4>
+            <p>Mahasiswa Teknik Informatika, ITB</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Finding a roommate was my biggest worry. The compatibility matching feature
+          connected me with someone who has the exact same schedule and cleanliness standards. Life-changing!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#e8d5c4">👩‍🎓</div>
+          <div class="author-info">
+            <h4>Dina Kusuma</h4>
+            <p>Mahasiswa Kedokteran, UNPAD</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="stars">★★★★☆</div>
+        <p class="testimonial-text">"As a property owner, the dashboard gives me everything I need — tenant requests,
+          occupancy stats, and even how my property is performing vs. similar listings in the area."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#d5dce8">👨‍💼</div>
+          <div class="author-info">
+            <h4>Budi Santoso</h4>
+            <p>Pemilik Kos, Dago Bandung</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="grid md:grid-cols-3 gap-8">
+  <!-- ============================================================
+     FOLDER STRUCTURE SECTION
+     ============================================================ -->
+  <section style="background:var(--charcoal);padding:72px 5%">
+    <div class="section-header reveal">
+      <div class="section-label" style="color:var(--sage-light)">Folder Structure</div>
+      <h2 style="color:white">Production-ready project layout</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px" class="reveal">
+      <div
+        style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px">
+        <div
+          style="color:var(--sage-light);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px">
+          Frontend — Next.js</div>
+        <pre
+          style="font-family:var(--font-mono);font-size:0.75rem;color:rgba(255,255,255,0.6);line-height:1.8;overflow-x:auto">kosmatch-frontend/
+├── app/
+│   ├── (auth)/login/
+│   ├── (auth)/register/
+│   ├── dashboard/
+│   │   ├── tenant/
+│   │   ├── owner/
+│   │   └── admin/
+│   ├── property/[id]/
+│   ├── search/
+│   ├── quiz/
+│   └── layout.tsx
+├── components/
+│   ├── ui/         # shadcn
+│   ├── property/
+│   ├── quiz/
+│   ├── dashboard/
+│   └── chat/
+├── lib/
+│   ├── api.ts
+│   ├── auth.ts
+│   └── utils.ts
+├── hooks/
+├── store/          # Zustand
+└── types/</pre>
+      </div>
+      <div
+        style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px">
+        <div
+          style="color:var(--clay-light);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px">
+          Backend — Node.js + Python AI</div>
+        <pre
+          style="font-family:var(--font-mono);font-size:0.75rem;color:rgba(255,255,255,0.6);line-height:1.8;overflow-x:auto">kosmatch-api/
+├── src/
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── propertyController.js
+│   │   ├── bookingController.js
+│   │   ├── matchController.js
+│   │   └── messageController.js
+│   ├── routes/
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   └── roleMiddleware.js
+│   ├── models/     # Prisma
+│   ├── services/
+│   └── utils/
+├── prisma/
+│   └── schema.prisma
+└── ai-service/     # Python
+    ├── main.py     # FastAPI
+    ├── matcher.py  # Scoring logic
+    ├── model/
+    └── requirements.txt</pre>
+      </div>
+    </div>
+  </section>
 
-<div class="card bg-slate-50 rounded-3xl shadow overflow-hidden">
-<div class="h-52 bg-slate-300"></div>
-<div class="p-6">
-<h4 class="font-bold text-xl">Quiet Studio</h4>
-<p class="text-slate-600">Jakarta • Rp2.1jt</p>
-<button onclick="book('Quiet Studio')" class="mt-4 w-full bg-indigo-600 text-white py-3 rounded-xl">Book Now</button>
-</div>
-</div>
+  <!-- ============================================================
+     CTA
+     ============================================================ -->
+  <section class="cta-section">
+    <h2>Ready to find your perfect kos?</h2>
+    <p>Join 8,200+ tenants who found their ideal boarding house through AI matching. Free to use, always.</p>
+    <button class="btn-cta" onclick="scrollToQuiz()">
+      🎯 Start AI Matching — It's Free
+    </button>
+  </section>
 
-<div class="card bg-slate-50 rounded-3xl shadow overflow-hidden">
-<div class="h-52 bg-slate-300"></div>
-<div class="p-6">
-<h4 class="font-bold text-xl">Urban Loft</h4>
-<p class="text-slate-600">Bandung • Rp3.2jt</p>
-<button onclick="book('Urban Loft')" class="mt-4 w-full bg-indigo-600 text-white py-3 rounded-xl">Book Now</button>
-</div>
-</div>
+  <!-- ============================================================
+     FOOTER
+     ============================================================ -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:8px">
+          <div class="logo-icon">🏠</div>
+          KosMatch<span style="color:var(--sage)">AI</span>
+        </div>
+        <p>Indonesia's first AI-powered boarding house matching platform. Built for students, young professionals, and
+          property owners.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#">Browse Kos</a>
+        <a href="#">AI Matching</a>
+        <a href="#">Roommate Finder</a>
+        <a href="#">List Your Property</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="#" onclick="event.preventDefault(); openAuthModal('registerModal')">Register</a>
+        <a href="#" onclick="event.preventDefault(); openAuthModal('loginModal')">Login</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#" onclick="event.preventDefault(); openAuthModal('profileModal')">Settings</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KosMatchAI. Dibuat dengan ❤️ untuk Indonesia.</p>
+      <p style="font-family:var(--font-mono);font-size:0.75rem">Daily Project 7 — AI Lifestyle Matching Kos</p>
+    </div>
+  </footer>
 
-<div class="card bg-slate-50 rounded-3xl shadow overflow-hidden">
-<div class="h-52 bg-slate-300"></div>
-<div class="p-6">
-<h4 class="font-bold text-xl">Creative House</h4>
-<p class="text-slate-600">Bali • Rp4.0jt</p>
-<button onclick="book('Creative House')" class="mt-4 w-full bg-indigo-600 text-white py-3 rounded-xl">Book Now</button>
-</div>
-</div>
+  <!-- ============================================================
+     PROPERTY DETAIL MODAL
+     ============================================================ -->
+  <div class="detail-modal-backdrop" id="detailModal" onclick="closeDetail(event)">
+    <div class="detail-modal">
+      <div class="detail-hero" id="modalHero" style="background:linear-gradient(135deg,#d4e8d5,#a8c5aa)">
+        🏡
+        <button class="detail-close"
+          onclick="document.getElementById('detailModal').classList.remove('open')">✕</button>
+      </div>
+      <div class="detail-body">
+        <h2 id="modalTitle">Kos Harmoni Premium Dago</h2>
+        <div class="detail-meta">
+          <span>📍 Dago, Bandung</span>
+          <span>🏠 Kos Campur</span>
+          <span>⭐ 4.8 (42 reviews)</span>
+          <span>🛏️ 3 kamar tersisa</span>
+        </div>
+        <div class="detail-tabs">
+          <button class="detail-tab active">Overview</button>
+          <button class="detail-tab">Fasilitas</button>
+          <button class="detail-tab">Lokasi</button>
+          <button class="detail-tab">Ulasan</button>
+        </div>
+        <div class="detail-grid">
+          <div>
+            <p style="margin-bottom:20px;font-size:0.95rem;line-height:1.8">Kos strategis di kawasan Dago yang tenang
+              dengan akses mudah ke ITB, Unpar, dan pusat kota Bandung. Kamar bersih dan terawat dengan fasilitas
+              lengkap untuk mahasiswa dan pekerja muda.</p>
+            <div class="amenities-grid">
+              <div class="amenity">
+                <div class="check">✓</div>AC Split Inverter
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>WiFi 50 Mbps
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>Dapur Bersama
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>Kamar Mandi Dalam
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>Parkir Motor & Mobil
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>CCTV 24 Jam
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>Air Panas
+              </div>
+              <div class="amenity">
+                <div class="check">✓</div>Lemari Besar
+              </div>
+            </div>
+            <div style="background:var(--mist);border-radius:12px;padding:16px;margin-top:8px">
+              <h4 style="font-size:0.88rem;margin-bottom:12px">AI Match Breakdown</h4>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:12px;font-size:0.82rem">
+                  <span style="width:100px;color:#666">Budget</span>
+                  <div style="flex:1;height:6px;background:white;border-radius:3px;overflow:hidden">
+                    <div
+                      style="height:100%;width:98%;background:linear-gradient(90deg,var(--sage),var(--sage-dark));border-radius:3px">
+                    </div>
+                  </div>
+                  <span style="font-family:var(--font-mono);font-weight:700;color:var(--sage-dark)">98%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;font-size:0.82rem">
+                  <span style="width:100px;color:#666">Location</span>
+                  <div style="flex:1;height:6px;background:white;border-radius:3px;overflow:hidden">
+                    <div
+                      style="height:100%;width:95%;background:linear-gradient(90deg,var(--sage),var(--sage-dark));border-radius:3px">
+                    </div>
+                  </div>
+                  <span style="font-family:var(--font-mono);font-weight:700;color:var(--sage-dark)">95%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;font-size:0.82rem">
+                  <span style="width:100px;color:#666">Lifestyle</span>
+                  <div style="flex:1;height:6px;background:white;border-radius:3px;overflow:hidden">
+                    <div
+                      style="height:100%;width:97%;background:linear-gradient(90deg,var(--sage),var(--sage-dark));border-radius:3px">
+                    </div>
+                  </div>
+                  <span style="font-family:var(--font-mono);font-weight:700;color:var(--sage-dark)">97%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="match-gauge">
+              <div class="gauge-label">AI Match Score</div>
+              <div class="gauge-number">98%</div>
+              <div class="gauge-sub">Highly Compatible</div>
+            </div>
+            <div class="booking-panel">
+              <div class="price-big">Rp 2.2jt</div>
+              <div class="price-sub">per bulan · sudah termasuk listrik & air</div>
+              <div class="form-group">
+                <label>Tanggal Masuk</label>
+                <input type="date" />
+              </div>
+              <div class="form-group">
+                <label>Durasi Sewa</label>
+                <select>
+                  <option>3 bulan</option>
+                  <option>6 bulan</option>
+                  <option>12 bulan</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px"
+                onclick="showToast('🎉 Booking request sent! Owner will reply within 24 hours.')">Kirim Booking
+                Request</button>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center"
+                onclick="showToast('💬 Chat opened with owner!')">💬 Chat Pemilik</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</div>
-</div>
-</section>
+  <!-- ============================================================
+     AUTH & PROFILE MODALS
+     ============================================================ -->
+  <div class="auth-modal-backdrop" id="loginModal" onclick="closeAuthModal(event, 'loginModal')">
+    <div class="auth-modal">
+      <button class="modal-close-btn"
+        onclick="document.getElementById('loginModal').classList.remove('open')">✕</button>
+      <h2 style="font-family:var(--font-display);font-weight:700">Welcome Back</h2>
+      <p>Please enter your details to sign in.</p>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="admin@gmail.com" value="admin@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" value="admin">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px" onclick="login()">Sign
+        In</button>
+      <p style="text-align:center;margin-top:20px;font-size:0.85rem">Don't have an account? <a href="#"
+          style="color:var(--sage-dark);font-weight:600" onclick="switchModal('loginModal', 'registerModal')">Sign
+          up</a></p>
+    </div>
+  </div>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="py-20 px-6">
-<div class="max-w-7xl mx-auto">
+  <div class="auth-modal-backdrop" id="registerModal" onclick="closeAuthModal(event, 'registerModal')">
+    <div class="auth-modal">
+      <button class="modal-close-btn"
+        onclick="document.getElementById('registerModal').classList.remove('open')">✕</button>
+      <h2 style="font-family:var(--font-display);font-weight:700">Create Account</h2>
+      <p>Join KosMatchAI and find your perfect place.</p>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="e.g. Budi Santoso">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>I am a...</label>
+        <select>
+          <option>Tenant (Looking for kos)</option>
+          <option>Owner (Listing a kos)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px"
+        onclick="register()">Sign Up</button>
+      <p style="text-align:center;margin-top:20px;font-size:0.85rem">Already have an account? <a href="#"
+          style="color:var(--sage-dark);font-weight:600" onclick="switchModal('registerModal', 'loginModal')">Sign
+          in</a></p>
+    </div>
+  </div>
 
-<h3 class="text-4xl font-bold text-center mb-12">Owner Dashboard</h3>
+  <div class="auth-modal-backdrop" id="profileModal" onclick="closeAuthModal(event, 'profileModal')">
+    <div class="profile-modal">
+      <button class="modal-close-btn"
+        onclick="document.getElementById('profileModal').classList.remove('open')">✕</button>
+      <h2 style="font-family:var(--font-display);font-weight:700;margin-bottom:8px">Profile Settings</h2>
+      <p>Manage your account settings and preferences.</p>
 
-<div class="grid md:grid-cols-4 gap-6">
+      <div class="profile-flex">
+        <div class="profile-avatar">A</div>
+        <div style="flex:1">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" value="Admin KosMatch">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" value="admin@gmail.com" readonly
+              style="background:var(--mist);color:#888;cursor:not-allowed">
+          </div>
+        </div>
+      </div>
 
-<div class="bg-white shadow rounded-3xl p-6">
-<h4 class="text-slate-500">Units</h4>
-<p class="text-3xl font-bold">12</p>
-</div>
+      <div class="profile-section-title">Security</div>
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" placeholder="Leave blank to keep current">
+      </div>
 
-<div class="bg-white shadow rounded-3xl p-6">
-<h4 class="text-slate-500">Occupancy</h4>
-<p class="text-3xl font-bold">91%</p>
-</div>
+      <div class="profile-section-title">Preferences</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:0.9rem">
+        <span>Email Notifications</span>
+        <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--sage)">
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:0.9rem">
+        <span>SMS Alerts</span>
+        <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage)">
+      </div>
 
-<div class="bg-white shadow rounded-3xl p-6">
-<h4 class="text-slate-500">Revenue</h4>
-<p class="text-3xl font-bold">Rp24jt</p>
-</div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:32px">
+        <button class="btn btn-ghost"
+          onclick="document.getElementById('profileModal').classList.remove('open')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+  </div>
 
-<div class="bg-white shadow rounded-3xl p-6">
-<h4 class="text-slate-500">Bookings</h4>
-<p class="text-3xl font-bold">8</p>
-</div>
+  <!-- Chat FAB -->
+  <button class="chat-fab" onclick="showToast('💬 Chat widget opening...')">💬</button>
 
-</div>
-</div>
-</section>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span id="toastIcon">✅</span>
+    <span id="toastMsg">Action completed!</span>
+  </div>
 
-<!-- CONTACT -->
-<section class="py-20 px-6 bg-white">
-<div class="max-w-4xl mx-auto">
+  <!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+  <script>
+    // ---- Toast Notification ----
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+    }
 
-<h3 class="text-4xl font-bold text-center mb-10">Live Chat Support</h3>
+    // ---- Scroll reveal ----
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-<textarea id="chat" class="w-full h-36 border rounded-2xl p-4" placeholder="Type message..."></textarea>
+    // ---- Navbar scroll effect ----
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      nav.style.boxShadow = window.scrollY > 20 ? '0 4px 24px rgba(28,28,30,0.08)' : '';
+    });
 
-<button onclick="sendChat()" class="mt-5 px-6 py-3 bg-indigo-600 text-white rounded-2xl">
-Send Message
-</button>
+    // ---- Dashboard tabs ----
+    function switchDash(type, btn) {
+      document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.dashboard-preview').forEach(d => d.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('dash-' + type).classList.add('active');
+    }
 
-<div id="chatResult" class="mt-5 font-semibold"></div>
+    // ---- Filter chips ----
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
 
-</div>
-</section>
+    // ---- Detail tab ----
+    document.querySelectorAll('.detail-tab').forEach(tab => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
 
-<!-- FOOTER -->
-<footer class="py-10 text-center text-slate-500">
-© 2026 AI Lifestyle Matching Kos
-</footer>
+    // ---- Property modal ----
+    const modalColors = {
+      kos1: 'linear-gradient(135deg,#d4e8d5,#a8c5aa)',
+      kos2: 'linear-gradient(135deg,#e8d5c4,#c4a08a)',
+      kos3: 'linear-gradient(135deg,#d5dce8,#8a9ac4)',
+      kos4: 'linear-gradient(135deg,#e8e4d5,#c4b88a)',
+      kos5: 'linear-gradient(135deg,#e8d5e0,#c48aa8)',
+      kos6: 'linear-gradient(135deg,#d5e8e4,#8ac4b8)',
+    };
+    const modalTitles = {
+      kos1: 'Kos Harmoni Premium Dago',
+      kos2: 'Kos Nyaman Setiabudi',
+      kos3: 'Griya Mahasiswa Cisitu',
+      kos4: 'Kos Modern Antapani',
+      kos5: 'Kos Putri Buah Batu',
+      kos6: 'Kos Alam Lembang',
+    };
+    function openDetail(id) {
+      document.getElementById('modalHero').style.background = modalColors[id] || 'var(--mist)';
+      document.getElementById('modalTitle').textContent = modalTitles[id] || 'Property Detail';
+      document.getElementById('detailModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDetail(e) {
+      if (e.target === document.getElementById('detailModal')) {
+        document.getElementById('detailModal').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
 
-<script>
-function toggleDark(){
-document.body.classList.toggle("dark")
-}
+    // ---- Favorites ----
+    function toggleFav(btn) {
+      const isFav = btn.textContent === '❤️';
+      btn.textContent = isFav ? '🤍' : '❤️';
+      showToast(isFav ? 'Removed from favorites' : '❤️ Saved to favorites!');
+    }
 
-function login(){
-alert("Demo Login Successful")
-}
+    // ---- Auth & Profile ----
+    function openAuthModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAuthModal(e, id) {
+      if (e.target === document.getElementById(id)) {
+        document.getElementById(id).classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+    function switchModal(closeId, openId) {
+      document.getElementById(closeId).classList.remove('open');
+      document.getElementById(openId).classList.add('open');
+    }
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+      if (email === 'admin@gmail.com' && pass === 'admin') {
+        showToast('Login successful! Welcome back.');
+        document.getElementById('authNav').style.display = 'none';
+        document.getElementById('userNav').style.display = 'flex';
+        document.getElementById('loginModal').classList.remove('open');
+        document.body.style.overflow = '';
+        // Switch to Admin dashboard by default for demo
+        document.querySelectorAll('.dash-tab')[2].click();
+      } else {
+        showToast('Invalid email or password');
+      }
+    }
+    function logout() {
+      showToast('Logged out successfully.');
+      document.getElementById('authNav').style.display = 'flex';
+      document.getElementById('userNav').style.display = 'none';
+    }
+    function register() {
+      showToast('Account created! Please sign in.');
+      switchModal('registerModal', 'loginModal');
+    }
+    function saveProfile() {
+      showToast('Profile settings saved!');
+      document.getElementById('profileModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
-function generateAI(){
-let personality=document.getElementById("personality").value
-let sleep=document.getElementById("sleep").value
-
-let result="Quiet Studio • 96% Match"
-
-if(personality=="Extrovert") result="Creative House • 94% Match"
-if(sleep=="Night Owl") result="Urban Loft • 95% Match"
-
-document.getElementById("result").innerHTML=result
-}
-
-function book(name){
-alert("Booking success for "+name)
-}
-
-function sendChat(){
-document.getElementById("chatResult").innerHTML="Support: Thank you, we received your message."
-}
-</script>
-
+    // ---- AI Quiz ----
+    const questions = [
+      { q: 'What is your monthly kos budget?', opts: [['💰', '< Rp 1 juta'], ['💳', 'Rp 1–1.5 juta'], ['💎', 'Rp 1.5–2.5 juta'], ['🏆', '> Rp 2.5 juta']] },
+      { q: 'What best describes your sleep schedule?', opts: [['🌙', 'Night owl (after midnight)'], ['🌅', 'Early bird (before 10 PM)'], ['🕙', 'Moderate (10 PM–12 AM)'], ['🎲', 'Varies daily']] },
+      { q: 'How important is cleanliness to you?', opts: [['🧹', 'Very important — I keep things spotless'], ['🙂', 'Moderately — neat but not obsessive'], ['😌', 'Relaxed — I clean when needed'], ['🌊', 'It depends on my mood']] },
+      { q: 'What is your social preference at home?', opts: [['🤝', 'I love meeting neighbors'], ['📚', 'I prefer quiet, focused time'], ['⚖️', 'Balance of both'], ['🎮', 'Gaming & staying in my room']] },
+      { q: 'What is your primary commute need?', opts: [['🚶', 'Walking distance from campus'], ['🛵', 'Motor / angkot nearby'], ['🚗', 'Need parking space'], ['💻', 'Remote — location flexible']] },
+    ];
+    let currentQ = 1;
+    function renderQuestion(idx) {
+      const q = questions[idx];
+      document.getElementById('quizQuestion').textContent = q.q;
+      document.getElementById('quizStep').textContent = `${idx + 1} / ${questions.length}`;
+      document.getElementById('quizProgress').style.width = `${((idx + 1) / questions.length) * 100}%`;
+      const optContainer = document.getElementById('quizOptions');
+      optContainer.innerHTML = q.opts.map(o =>
+        `<div class="quiz-option" onclick="selectOption(this)"><span class="opt-icon">${o[0]}</span><span>${o[1]}</span></div>`
+      ).join('');
+    }
+    function selectOption(el) {
+      document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    function nextQuestion() {
+      if (currentQ < questions.length - 1) {
+        currentQ++;
+        renderQuestion(currentQ);
+      } else {
+        showToast('🎉 AI analysis complete! Showing your top matches...');
+        setTimeout(() => document.getElementById('listings').scrollIntoView({ behavior: 'smooth' }), 800);
+      }
+    }
+    function prevQuestion() {
+      if (currentQ > 0) { currentQ--; renderQuestion(currentQ); }
+    }
+    function scrollToQuiz() {
+      document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+    }
+    renderQuestion(currentQ);
+  </script>
 </body>
+
 </html>

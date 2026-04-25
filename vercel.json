@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/ai-kos-matching.html"
+    }
+  ]
+}</content>
+<parameter name="filePath">c:\Users\Razel\Downloads\New folder (5)\vercel.json
